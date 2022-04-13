@@ -1,6 +1,6 @@
 # Interactive comments section
 
-This is a solution to the [E-commerce product page](https://www.frontendmentor.io/challenges/ecommerce-product-page-UPsZ9MJp6).
+This is a solution to the [E-commerce product page challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ecommerce-product-page-UPsZ9MJp6).
 
 ## Table of contents
 
@@ -11,9 +11,7 @@ This is a solution to the [E-commerce product page](https://www.frontendmentor.i
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
-  - [Useful resources](#useful-resources)
 - [Author](#author)
-- [Acknowledgments](#acknowledgments)
 
 ## Overview
 
@@ -32,7 +30,7 @@ Users are able to:
 
 ### Screenshot
 
-[Watch screenshot](src/assets/product-page-preview.png)
+![image](src/assets/product-page-preview.png)
 
 ### Link
 
@@ -44,8 +42,8 @@ Users are able to:
 
 - [Vue.js](https://vuejs.org/) - JS framework
 - [Vuex.js](https://vuex.vuejs.org/) - State manager
-- [SCSS] (https://sass-lang.com/) - CSS pre-processor
-- [Vue-Agile] (https://github.com/lukaszflorczak/vue-agile) - A carousel component for Vue.js inspired by Slick
+- [SCSS](https://sass-lang.com/) - CSS pre-processor
+- [Vue-Agile](https://github.com/lukaszflorczak/vue-agile) - A carousel component for Vue.js inspired by Slick
 
 ### What I learned
 
