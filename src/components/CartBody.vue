@@ -1,0 +1,44 @@
+<template>
+  <div class="container">
+    <div class="cart-wrapper">
+      <img-slider @openModalSlider="openModalSlider"></img-slider>
+      <item-description></item-description>
+    </div>
+  </div>
+</template>
+
+<script>
+import ImgSlider from "./ImgSlider.vue";
+import ItemDescription from "./ItemDescription.vue";
+export default {
+  components: { ImgSlider, ItemDescription },
+  data() {
+    return {
+      modalIsActive: false,
+    };
+  },
+  methods: {
+    openModalSlider() {
+      this.$emit("openModalSlider");
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+.cart-wrapper {
+  margin-top: 90px;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 46px;
+  gap: 124px;
+  @media (max-width: 1030px) {
+    gap: 50px;
+    margin-left: 0;
+  }
+  @media (max-width: 800px) {
+    flex-direction: column;
+    margin-top: 24px;
+  }
+}
+</style>
