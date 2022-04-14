@@ -84,7 +84,6 @@ body {
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   font-family: "Kumbh Sans", sans-serif;
-  image-rendering: -webkit-optimize-contrast;
   margin-bottom: 32px;
 }
 

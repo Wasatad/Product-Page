@@ -4,43 +4,24 @@
       <div @click.stop class="modal-slider-wrapper">
         <div class="prev-arrow" @click="$refs.main.goToPrev()">
           <svg
-            width="15"
-            height="18"
-            viewBox="0 0 15 18"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_3_348)">
-              <path d="M11 1L3 9L11 17" stroke="#1D2026" stroke-width="3" />
-            </g>
-            <defs>
-              <clipPath id="clip0_3_348">
-                <rect width="15" height="18" fill="white" />
-              </clipPath>
-            </defs>
+            <path d="M13.5 2L6 9.5L14 17.5" stroke="#1D2025" stroke-width="3" />
           </svg>
         </div>
         <div class="next-arrow" @click="$refs.main.goToNext()">
           <svg
-            width="15"
-            height="18"
-            viewBox="0 0 15 18"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_3_350)">
-              <path d="M4 1L12 9L4 17" stroke="#1D2026" stroke-width="3" />
-            </g>
-            <defs>
-              <clipPath id="clip0_3_350">
-                <rect
-                  width="15"
-                  height="18"
-                  fill="white"
-                  transform="matrix(-1 0 0 1 15 0)"
-                />
-              </clipPath>
-            </defs>
+            <path d="M6.5 2L14 9.5L6 17.5" stroke="#1D2025" stroke-width="3" />
           </svg>
         </div>
         <div @click="close" class="close-btn">

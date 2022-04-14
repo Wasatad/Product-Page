@@ -38,7 +38,9 @@
           <div v-if="!isEmpty" class="amount-bage">{{ amount }}</div>
         </div>
         <div class="img-container">
-          <img class="avatar" src="../assets/image-avatar.png" alt="avatar" />
+          <div class="img-inner">
+            <img class="avatar" src="../assets/image-avatar.png" alt="avatar" />
+          </div>
           <product-cart v-if="isCartOpened"></product-cart>
         </div>
       </div>
@@ -149,14 +151,38 @@ export default {
       @media (max-width: 470px) {
         position: static;
       }
-    }
 
-    .avatar {
-      width: 50px;
-      border-radius: 100%;
-      transition: all 0.5s;
-      &:hover {
-        box-shadow: 0px 0px 0px 2px $orange;
+      .img-inner {
+        &:before {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          border-radius: 100%;
+          content: "";
+          width: 46px;
+          height: 46px;
+          background-color: $orange;
+          transition: all 0.3s;
+        }
+      }
+
+      .img-inner {
+        width: 50px;
+        height: 50px;
+        position: relative;
+        &:hover:before {
+          transform: scale(1.18);
+        }
+      }
+
+      .avatar {
+        width: 50px;
+        border-radius: 100%;
+        position: relative;
+
+        &:hover {
+          // box-shadow: 0px 0px 0px 2px $orange;
+        }
       }
     }
 
