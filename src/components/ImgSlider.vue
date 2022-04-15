@@ -150,7 +150,10 @@ export default {
       this.imagesReceived = true;
     }, 500);
   },
-  updated() {},
+  updated() {
+    this.$refs.mainDesc.reload();
+    this.$refs.thumbnailsDesc.reload();
+  },
 };
 </script>
 
@@ -163,7 +166,10 @@ export default {
   overflow: visible;
   @media (max-width: 800px) {
     margin: 0 auto;
-    width: 100%;
+    // width: 100%;
+  }
+  @media (max-width: 480px) {
+    margin: 0;
   }
 }
 
