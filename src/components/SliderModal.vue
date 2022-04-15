@@ -90,6 +90,7 @@ export default {
     return {
       activeLink: "",
       modalMode: true,
+      imagesReceived: true,
 
       asNavFor1: [],
       asNavFor2: [],
@@ -136,12 +137,9 @@ export default {
       this.$emit("close-modal");
     },
   },
-  beforeMount() {
-    this.slides = this.$store.getters.productImages(1);
-  },
-  mounted() {
-    this.asNavFor1.push(this.$refs.thumbnails);
-    this.asNavFor2.push(this.$refs.main);
+
+  async mounted() {
+    this.slides = await this.$store.dispatch("productImages", 1);
   },
   updated() {
     this.asNavFor1.push(this.$refs.thumbnails);
@@ -244,7 +242,6 @@ export default {
 
 .thumbnails {
   margin: 0 auto;
-  width: calc(100% - 40px);
 }
 
 .slide {

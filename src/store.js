@@ -101,5 +101,14 @@ export default createStore({
     toggleCartVisibility(context) {
       context.commit("toggleCartVisibility");
     },
+    async productImages(context, id) {
+      let promise = await context.state.products.find(
+        (product) => product.id == id
+      );
+
+      let product = await promise;
+
+      return product.images;
+    },
   },
 });

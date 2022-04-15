@@ -1,5 +1,5 @@
 <template>
-  <div @click.stop class="slider-wrapper">
+  <div ref="wrapper" class="slider-wrapper">
     <div class="prev-arrow" @click="$refs.mainDesc.goToPrev()">
       <svg
         width="15"
@@ -44,8 +44,9 @@
 
     <agile
       @click="openModalSlider"
-      class="main"
+      :class="[{ hide: !imagesReceived }, mainClass]"
       ref="mainDesc"
+      id="mainDesc"
       :options="options1"
       :as-nav-for="asNavFor1"
     >
@@ -55,11 +56,12 @@
         :key="index"
         :class="`slide--${index}`"
       >
-        / <img :src="require('../assets/' + slide)" alt="" />
+        <img :src="require('../assets/' + slide)" alt="" />
       </div>
     </agile>
     <agile
-      class="thumbnails"
+      :class="[{ hide: !imagesReceived }, thumbnailsClass]"
+      id="thumbnailsDesc"
       ref="thumbnailsDesc"
       :options="options2"
       :as-nav-for="asNavFor2"
@@ -89,6 +91,11 @@ export default {
       activeLink: "",
       modalMode: true,
 
+      mainClass: "main",
+      thumbnailsClass: "thumbnails",
+
+      imagesReceived: false,
+
       asNavFor1: [],
       asNavFor2: [],
       options1: {
@@ -116,7 +123,6 @@ export default {
           },
         ],
       },
-
       slides: [],
     };
   },
@@ -133,22 +139,30 @@ export default {
       this.$emit("openModalSlider");
     },
   },
-  beforeMount() {
-    this.slides = this.$store.getters.productImages(1);
+
+  async mounted() {
+    this.slides = await this.$store.dispatch("productImages", 1);
+    setTimeout(() => {
+      this.asNavFor1.push(this.$refs.thumbnailsDesc);
+      this.asNavFor2.push(this.$refs.mainDesc);
+      this.$refs.mainDesc.reload();
+      this.$refs.thumbnailsDesc.reload();
+      this.imagesReceived = true;
+    }, 500);
   },
-  mounted() {
-    this.asNavFor1.push(this.$refs.thumbnailsDesc);
-    this.asNavFor2.push(this.$refs.mainDesc);
-  },
+  updated() {},
 };
 </script>
 
 <style scoped lang="scss">
 .slider-wrapper {
-  width: 444px;
+  max-width: 444px;
+
+  height: auto;
   position: relative;
   overflow: visible;
   @media (max-width: 800px) {
+    margin: 0 auto;
     width: 100%;
   }
 }
@@ -219,7 +233,8 @@ export default {
 
 .main {
   margin-bottom: 30px;
-  width: 444px;
+  width: 100%;
+  height: auto;
   border-radius: 13px;
   overflow: hidden;
   cursor: pointer;
@@ -236,7 +251,7 @@ export default {
 }
 
 .thumbnails {
-  margin: 0 auto;
+  margin: 0;
 }
 
 .slide {
@@ -244,13 +259,14 @@ export default {
   box-sizing: border-box;
   color: #fff;
   display: flex;
+  height: 444px;
   justify-content: center;
 }
 .slide--thumbniail {
   cursor: pointer;
   height: 88px;
   width: 100%;
-  padding: 0;
+  padding: 0 5px;
   transition: opacity 0.3s;
   @media (max-width: 400px) {
     height: 70px;
@@ -269,9 +285,14 @@ export default {
 
 .slide img {
   height: 100%;
+  width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
   -o-object-position: center;
   object-position: center;
+}
+
+.hide {
+  visibility: hidden;
 }
 </style>

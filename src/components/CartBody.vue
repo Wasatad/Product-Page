@@ -32,7 +32,8 @@ export default {
   justify-content: flex-start;
   margin-left: 46px;
   gap: 124px;
-  @media (max-width: 1030px) {
+  width: 100%;
+  @media (max-width: 1200px) {
     gap: 50px;
     margin-left: 0;
   }
