@@ -12,6 +12,8 @@
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-agile": "^2.0.0",
+    "vue-credit-card-validation": "^1.0.5",
+    "vue3-country-region-select": "^1.0.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
@@ -22,11 +24,12 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "gh-pages": "^3.2.3",
     "node-sass": "^7.0.1",
     "sass": "^1.50.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
-    "gh-pages": "^3.2.3"
+    "vue-router": "^4.0.14"
   },
   "eslintConfig": {
     "root": true,

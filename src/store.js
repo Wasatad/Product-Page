@@ -10,10 +10,10 @@ export default createStore({
           description:
             "These low-profile sneakers are your perfect casual wear companion. Featuring a durable rubber outer sole, they’ll withstand everything the weather can offer.",
           images: [
-            "image-product-1.jpg",
-            "image-product-2.jpg",
-            "image-product-3.jpg",
-            "image-product-4.jpg",
+            "woman-image-product-1.jpg",
+            "woman-image-product-2.jpg",
+            "woman-image-product-3.jpg",
+            "woman-image-product-4.jpg",
           ],
           price: "$125.00",
           oldPrice: "$250.00",
@@ -22,6 +22,11 @@ export default createStore({
       counterAmount: 1,
       cart: [],
       cartVisibility: false,
+      creditModalOpen: false,
+      congratsModalOpen: false,
+      savedCards: [],
+      client: [],
+      total: 0,
     };
   },
   getters: {
@@ -43,6 +48,12 @@ export default createStore({
     },
     findProduct: (state) => (id) => {
       return state.products.find((product) => product.id == id);
+    },
+    noCards(state) {
+      if (state.savedCards.length == 0) {
+        return true;
+      }
+      return false;
     },
   },
   mutations: {
@@ -80,6 +91,21 @@ export default createStore({
     },
     openCart(state) {
       state.cartVisibility = true;
+    },
+    addCard(state, payload) {
+      state.savedCards.push(payload);
+    },
+    addClient(state, payload) {
+      state.client.push(payload);
+    },
+    setTotal(state, payload) {
+      state.total = payload;
+    },
+    toggleCreditModal(state) {
+      state.creditModalOpen = !state.creditModalOpen;
+    },
+    toggleCongratsModal(state) {
+      state.congratsModalOpen = !state.congratsModalOpen;
     },
   },
   actions: {

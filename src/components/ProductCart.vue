@@ -42,7 +42,15 @@
           <use fill="#C3CAD9" fill-rule="nonzero" xlink:href="#a" />
         </svg>
       </div>
-      <button v-if="!isEmpty" class="checkout">Checkout</button>
+      <router-link
+        @click="closeCartWindow"
+        :to="{
+          name: 'CheckoutPage',
+        }"
+        v-if="!isEmpty"
+        class="checkout"
+        >Checkout</router-link
+      >
     </div>
   </div>
 </template>
@@ -69,6 +77,13 @@ export default {
   methods: {
     deleteFromCart(id) {
       this.$store.dispatch("deleteFromCart", id);
+      if (this.$route.name == "CheckoutPage") {
+        this.$router.push("/");
+        this.closeCartWindow();
+      }
+    },
+    closeCartWindow() {
+      this.$store.commit("closeCart");
     },
   },
 };
@@ -156,6 +171,10 @@ export default {
   }
 
   .checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     height: 56px;
     width: 100%;
     background-color: $orange;

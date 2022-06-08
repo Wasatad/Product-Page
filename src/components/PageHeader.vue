@@ -16,7 +16,7 @@
         <img src="../assets/logo.svg" alt="logo" />
       </div>
       <div class="menu">
-        <span>Collections</span><span>Men</span><span>Woman</span
+        <span>Collections</span><span>Men</span><span><span>Woman</span> </span
         ><span>About</span><span>Contact</span>
       </div>
       <div class="profile">
@@ -88,6 +88,10 @@ export default {
 </script>
 
 <style lang="scss">
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
 .header {
   height: 110px;
   width: 100%;

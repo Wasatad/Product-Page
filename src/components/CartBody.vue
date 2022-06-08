@@ -22,6 +22,7 @@ export default {
       this.$emit("openModalSlider");
     },
   },
+  computed: {},
 };
 </script>
 

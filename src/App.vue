@@ -3,17 +3,23 @@
     @closeModal="closeModalSlider"
     :modalIsActive="modalIsActive"
   ></slider-modal>
+  <credit-modal v-if="creditModalOpen"></credit-modal>
+  <congrats-modal v-if="congratsModalOpen"></congrats-modal>
   <mobile-menu :is-open="isMenuOpen" @close="close"></mobile-menu>
 
   <page-header @openMenu="open"></page-header>
-  <cart-body @openModalSlider="openModalSlider"></cart-body>
+
+  <router-view @openModalSlider="openModalSlider" />
 </template>
 
 <script>
 import PageHeader from "./components/PageHeader.vue";
 import MobileMenu from "./components/MobileMenu.vue";
 import SliderModal from "./components/SliderModal.vue";
-import CartBody from "./components/CartBody.vue";
+import CreditModal from "./components/CreditModal.vue";
+import CongratsModal from "./components/CongratsModal.vue";
+
+import { mapState } from "vuex";
 
 export default {
   name: "App",
@@ -21,7 +27,8 @@ export default {
     PageHeader,
     MobileMenu,
     SliderModal,
-    CartBody,
+    CreditModal,
+    CongratsModal,
   },
   data() {
     return {
@@ -42,6 +49,9 @@ export default {
     openModalSlider() {
       this.modalIsActive = true;
     },
+  },
+  computed: {
+    ...mapState(["creditModalOpen", "congratsModalOpen"]),
   },
 };
 </script>
@@ -84,7 +94,6 @@ body {
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   font-family: "Kumbh Sans", sans-serif;
-  margin-bottom: 32px;
 }
 
 .container {
@@ -115,5 +124,24 @@ select {
   font: inherit;
   outline: none;
   border: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+#app {
+  position: relative;
 }
 </style>
