@@ -86,7 +86,13 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["addProduct", "deleteProduct", "openCart", "addToCart"]),
+    ...mapMutations([
+      "addProduct",
+      "deleteProduct",
+      "openCart",
+      "addToCart",
+      "setAmount",
+    ]),
     enteredAmount(event) {
       if (
         !event.key.match(/^[0-9]/g) &&
@@ -106,16 +112,16 @@ export default {
       ) {
         let newValue = "";
         newValue = event.target.innerText.split("").slice(1).join("");
-        this.$store.dispatch("setAmount", +newValue);
+        this.setAmount(+newValue);
         event.target.innerText = this.counterAmount;
       } else if (
         event.target.innerText == "0" &&
         event.target.innerText.length < 2
       ) {
-        this.$store.dispatch("setAmount", 1);
+        this.setAmount(1);
         event.target.innerText = this.counterAmount;
       } else {
-        this.$store.dispatch("setAmount", +event.target.innerText);
+        this.setAmount(+event.target.innerText);
         event.target.innerText = this.counterAmount;
       }
     },
