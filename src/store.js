@@ -10,10 +10,10 @@ export default createStore({
           description:
             "These low-profile sneakers are your perfect casual wear companion. Featuring a durable rubber outer sole, they’ll withstand everything the weather can offer.",
           images: [
-            "woman-image-product-1.jpg",
-            "woman-image-product-2.jpg",
-            "woman-image-product-3.jpg",
-            "woman-image-product-4.jpg",
+            "https://i.ibb.co/zbqPTDB/woman-image-product-4.jpg",
+            "https://i.ibb.co/NnRTGBQ/woman-image-product-3.jpg",
+            "https://i.ibb.co/TwCZCLg/woman-image-product-2.jpg",
+            "https://i.ibb.co/qx7Rd8x/woman-image-product-1.jpg",
           ],
           price: "$125.00",
           oldPrice: "$250.00",
@@ -70,6 +70,7 @@ export default createStore({
       let item = state.products.find((product) => product.id == payload);
       if (state.cart.findIndex((product) => product.id == payload) == -1) {
         state.cart.push(item);
+
         state.cart.find((product) => product == item).amount =
           1 * state.counterAmount;
         state.counterAmount = 1;
@@ -78,10 +79,12 @@ export default createStore({
           1 * state.counterAmount;
         state.counterAmount = 1;
       }
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     deleteFromCart(state, payload) {
       let index = state.cart.findIndex((item) => item.id == payload);
       state.cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     toggleCartVisibility(state) {
       state.cartVisibility = !state.cartVisibility;
@@ -94,12 +97,21 @@ export default createStore({
     },
     addCard(state, payload) {
       state.savedCards.push(payload);
+      localStorage.setItem("savedCards", JSON.stringify(state.savedCards));
+    },
+    deleteCard(state, payload) {
+      state.savedCards = state.savedCards.filter((card) => {
+        return card.number != payload;
+      });
+      localStorage.setItem("savedCards", JSON.stringify(state.savedCards));
     },
     addClient(state, payload) {
       state.client.push(payload);
+      localStorage.setItem("client", JSON.stringify(state.client));
     },
     setTotal(state, payload) {
       state.total = payload;
+      localStorage.setItem("total", JSON.stringify(state.total));
     },
     toggleCreditModal(state) {
       state.creditModalOpen = !state.creditModalOpen;
@@ -109,32 +121,21 @@ export default createStore({
     },
   },
   actions: {
-    addProduct(context) {
-      context.commit("addProduct");
-    },
-    deleteProduct(context) {
-      context.commit("deleteProduct");
-    },
-    setAmount(context, payload) {
-      context.commit("setAmount", payload);
-    },
-    addToCart(context, payload) {
-      context.commit("addToCart", payload);
-    },
-    deleteFromCart(context, payload) {
-      context.commit("deleteFromCart", payload);
-    },
-    toggleCartVisibility(context) {
-      context.commit("toggleCartVisibility");
-    },
-    async productImages(context, id) {
-      let promise = await context.state.products.find(
-        (product) => product.id == id
-      );
-
-      let product = await promise;
-
-      return product.images;
+    initialiseStore(context) {
+      if (localStorage.getItem("cart")) {
+        context.state.cart = JSON.parse(localStorage.getItem("cart"));
+      }
+      if (localStorage.getItem("savedCards")) {
+        context.state.savedCards = JSON.parse(
+          localStorage.getItem("savedCards")
+        );
+      }
+      if (localStorage.getItem("client")) {
+        context.state.client = JSON.parse(localStorage.getItem("client"));
+      }
+      if (localStorage.getItem("total")) {
+        context.state.total = JSON.parse(localStorage.getItem("total"));
+      }
     },
   },
 });

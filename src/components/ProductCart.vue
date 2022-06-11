@@ -4,14 +4,7 @@
     <div class="body">
       <span v-if="isEmpty" class="empty">Your cart is empty.</span>
       <div v-for="item in cart" :key="item.id" class="item">
-        <img
-          :src="
-            require('../assets/' +
-              item.images[0].split('.')[0] +
-              '-thumbnail.jpg')
-          "
-          alt=""
-        />
+        <img :src="item.images[0]" alt="" />
         <div class="description">
           <div class="name">{{ item.name }}</div>
           <div class="price-and-amount">
@@ -26,7 +19,7 @@
         </div>
 
         <svg
-          @click="deleteFromCart(item.id)"
+          @click="deleteItem(item.id)"
           class="delete-icon"
           width="14"
           height="16"
@@ -43,7 +36,7 @@
         </svg>
       </div>
       <router-link
-        @click="closeCartWindow"
+        @click="closeCart"
         :to="{
           name: 'CheckoutPage',
         }"
@@ -56,35 +49,37 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {};
   },
   computed: {
-    cart() {
-      return this.$store.state.cart;
-    },
-    totalAmount() {
-      return this.$store.getters.totalAmount;
-    },
+    ...mapState(["cart"]),
+    ...mapGetters(["totalAmount"]),
     isEmpty() {
-      if (this.$store.state.cart.length == 0) {
+      if (this.cart.length == 0) {
         return true;
       }
       return false;
     },
   },
   methods: {
-    deleteFromCart(id) {
-      this.$store.dispatch("deleteFromCart", id);
+    ...mapMutations(["deleteFromCart", "closeCart"]),
+    deleteItem(id) {
       if (this.$route.name == "CheckoutPage") {
         this.$router.push("/");
-        this.closeCartWindow();
+        setTimeout(() => this.deleteFromCart(id), 200);
+      } else {
+        this.deleteFromCart(id);
       }
     },
-    closeCartWindow() {
-      this.$store.commit("closeCart");
-    },
+  },
+  mounted() {
+    this.closeCart;
+  },
+  beforeCreate() {
+    this.$store.dispatch("initialiseStore");
   },
 };
 </script>
@@ -181,9 +176,25 @@ export default {
     color: #ffffff;
     font-weight: 700;
     border-radius: 9px;
+    box-shadow: 0 0 0 0 rgba(255, 126, 27, 0.2);
+    animation: pulse 1.5s infinite;
     cursor: pointer;
     &:hover {
       background-color: $orangehover;
+      animation: none;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(255, 126, 27, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 126, 27, 0);
+      }
     }
   }
 }

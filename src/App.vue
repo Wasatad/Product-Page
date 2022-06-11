@@ -1,7 +1,7 @@
 <template>
   <slider-modal
+    v-if="modalIsActive"
     @closeModal="closeModalSlider"
-    :modalIsActive="modalIsActive"
   ></slider-modal>
   <credit-modal v-if="creditModalOpen"></credit-modal>
   <congrats-modal v-if="congratsModalOpen"></congrats-modal>

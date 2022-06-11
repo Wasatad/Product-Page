@@ -37,9 +37,7 @@
             </div>
           </div>
         </div>
-        <router-link @click="closeModal" class="back-btn" :to="{ name: 'Home' }"
-          >Go Back</router-link
-        >
+        <div @click="closeModal" class="back-btn">Go Back</div>
       </div>
     </transition>
   </div>
@@ -54,19 +52,27 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["toggleCongratsModal"]),
+    ...mapMutations(["toggleCongratsModal", "deleteFromCart"]),
     closeModal() {
       this.animationIsReady = false;
-      setTimeout(() => this.toggleCongratsModal(), 400);
+      setTimeout(() => {
+        this.toggleCongratsModal();
+        this.deleteFromCart();
+        this.$router.push("/");
+      }, 400);
     },
   },
   computed: {
     ...mapState(["client", "total", "cart"]),
   },
+
   mounted() {
-    setTimeout(() => (this.animationIsReady = true), 600);
+    this.animationIsReady = true;
+    document.body.classList.add("modal-open");
   },
-  unmounted() {},
+  unmounted() {
+    document.body.classList.remove("modal-open");
+  },
 };
 </script>
 
@@ -81,10 +87,12 @@ export default {
   z-index: 3;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 0px 15px;
+  overflow: scroll;
 
   .modal {
+    margin: 80px 0;
     max-width: 745px;
     width: 100%;
     border-radius: 15px;
@@ -100,14 +108,10 @@ export default {
       font-size: 32px;
       color: #fff;
       @media (max-width: 650px) {
-        // padding: 18px 24px;
       }
     }
   }
   .modal-body {
-    // display: flex;
-    // align-items: center;
-    // gap: 30px;
     background-color: #fff;
     padding: 27px 55px;
 
@@ -204,7 +208,7 @@ export default {
   }
 }
 
-// Form transition
+// Modal transition
 .congrats-modal-enter-active,
 .congrats-modal-leave-active {
   transition: 0.6s ease all;

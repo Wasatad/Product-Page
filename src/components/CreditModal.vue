@@ -8,7 +8,6 @@
         </div>
         <div class="modal-body">
           <div class="modal-info">
-            <!-- <form @submit.prevent="showCongrats" id="myform"></form> -->
             <div class="checkout-input">
               <label for="number">Card Number:</label>
               <input
@@ -106,7 +105,6 @@ export default {
       if (e.target.value.length > 3) {
         if (this.cardBrand == null || this.cardBrand == "unknown") {
           e.target.style.border = "1px solid red";
-          // e.target.closest(".error").style.display = "block";
           if (!document.querySelector(".error")) {
             let error = document.createElement("div");
             error.innerText = "Invalid Card Number";

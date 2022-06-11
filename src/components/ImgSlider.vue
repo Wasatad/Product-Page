@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapper" class="slider-wrapper">
-    <div class="prev-arrow" @click="$refs.mainDesc.goToPrev()">
+    <div @click="swiper.slidePrev()" class="swiper-button-prev">
       <svg
         width="15"
         height="18"
@@ -18,7 +18,8 @@
         </defs>
       </svg>
     </div>
-    <div class="next-arrow" @click="$refs.mainDesc.goToNext()">
+
+    <div @click="swiper.slideNext()" class="swiper-button-next">
       <svg
         width="15"
         height="18"
@@ -42,98 +43,72 @@
       </svg>
     </div>
 
-    <agile
+    <swiper
       @click="openModalSlider"
-      :class="[{ hide: !imagesReceived }, mainClass]"
-      ref="mainDesc"
-      id="mainDesc"
-      :options="options1"
-      :as-nav-for="asNavFor1"
+      :style="{
+        '--swiper-navigation-color': '#fff',
+        '--swiper-pagination-color': '#fff',
+      }"
+      :loop="true"
+      :spaceBetween="10"
+      :navigation="true"
+      :thumbs="{ swiper: thumbsSwiper }"
+      :modules="modules"
+      class="main"
     >
-      <div
-        class="slide"
-        v-for="(slide, index) in slides"
-        :key="index"
-        :class="`slide--${index}`"
-      >
-        <img :src="require('../assets/' + slide)" alt="" />
-      </div>
-    </agile>
-    <agile
-      :class="[{ hide: !imagesReceived }, thumbnailsClass]"
-      id="thumbnailsDesc"
-      ref="thumbnailsDesc"
-      :options="options2"
-      :as-nav-for="asNavFor2"
+      <swiper-slide v-for="(slide, id) in slides" :key="id"
+        ><img :src="slide"
+      /></swiper-slide>
+    </swiper>
+    <swiper
+      @swiper="setThumbsSwiper"
+      :loop="false"
+      :spaceBetween="10"
+      :slidesPerView="4"
+      :freeMode="true"
+      :watchSlidesProgress="true"
+      :modules="modules"
+      class="thumbnails"
     >
-      <div
-        class="slide slide--thumbniail"
-        v-for="(slide, index) in slides"
-        :key="index"
-        :class="`slide--${index}`"
-        @click="$refs.thumbnailsDesc.goTo(index)"
-      >
-        <img
-          :src="require('../assets/' + slide.split('.')[0] + '-thumbnail.jpg')"
-          alt=""
-        />
-      </div>
-    </agile>
+      <swiper-slide v-for="(slide, id) in slides" :key="id"
+        ><img :src="slide"
+      /></swiper-slide>
+    </swiper>
   </div>
 </template>
 
 <script>
-import { VueAgile } from "vue-agile";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { FreeMode, Navigation, Thumbs } from "swiper";
+
+import "swiper/css";
+
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import { mapState } from "vuex";
+
 export default {
-  components: { agile: VueAgile },
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
-      activeLink: "",
-      modalMode: true,
+      thumbsSwiper: null,
 
-      mainClass: "main",
-      thumbnailsClass: "thumbnails",
-
-      imagesReceived: false,
-
-      asNavFor1: [],
-      asNavFor2: [],
-      options1: {
-        dots: false,
-        fade: true,
-        navButtons: false,
-      },
-
-      options2: {
-        autoplay: false,
-        centerMode: true,
-        dots: false,
-        navButtons: false,
-        slidesToShow: 4,
-        responsive: [
-          {
-            breakpoint: 600,
-            settings: {
-              slidesToShow: 4,
-            },
-          },
-
-          {
-            breakpoint: 1000,
-          },
-        ],
-      },
+      swiper: null,
       slides: [],
+      modules: [FreeMode, Navigation, Thumbs],
     };
   },
+
   computed: {
-    activeImage() {
-      return require(`../assets/` + this.activeLink);
-    },
+    ...mapState(["products"]),
   },
   methods: {
-    updateActiveLink(image) {
-      this.activeLink = image;
+    setThumbsSwiper(swiper) {
+      this.thumbsSwiper = swiper;
     },
     openModalSlider() {
       this.$emit("openModalSlider");
@@ -141,18 +116,15 @@ export default {
   },
 
   async mounted() {
-    this.slides = await this.$store.dispatch("productImages", 1);
-    setTimeout(() => {
-      this.asNavFor1.push(this.$refs.thumbnailsDesc);
-      this.asNavFor2.push(this.$refs.mainDesc);
-      this.$refs.mainDesc.reload();
-      this.$refs.thumbnailsDesc.reload();
-      this.imagesReceived = true;
-    }, 500);
+    let swiper = document.querySelector(".swiper").swiper;
+    this.swiper = swiper;
   },
-  updated() {
-    this.$refs.mainDesc.reload();
-    this.$refs.thumbnailsDesc.reload();
+  created() {
+    let product = this.products.find((product) => {
+      return product.id == 1;
+    });
+
+    this.slides = product.images;
   },
 };
 </script>
@@ -166,15 +138,10 @@ export default {
   overflow: visible;
   @media (max-width: 800px) {
     margin: 0 auto;
-    // width: 100%;
   }
   @media (max-width: 480px) {
     margin: 0;
   }
-}
-
-.agile__list {
-  border-radius: 13px;
 }
 
 .close-btn svg {
@@ -187,7 +154,7 @@ export default {
   }
 }
 
-.prev-arrow {
+.swiper-button-prev {
   visibility: hidden;
   width: 56px;
   height: 56px;
@@ -212,7 +179,7 @@ export default {
   }
 }
 
-.next-arrow {
+.swiper-button-next {
   visibility: hidden;
   width: 56px;
   height: 56px;
@@ -237,8 +204,8 @@ export default {
   }
 }
 
-.main {
-  margin-bottom: 30px;
+.swiper {
+  margin-bottom: 16px;
   width: 100%;
   height: auto;
   border-radius: 13px;
@@ -256,10 +223,6 @@ export default {
   }
 }
 
-.thumbnails {
-  margin: 0;
-}
-
 .slide {
   align-items: center;
   box-sizing: border-box;
@@ -268,7 +231,7 @@ export default {
   height: 444px;
   justify-content: center;
 }
-.slide--thumbniail {
+.swiper-slide {
   cursor: pointer;
   height: 88px;
   width: 100%;
@@ -281,15 +244,31 @@ export default {
     border-radius: 8px;
   }
 }
-.slide--thumbniail:hover {
+.swiper-slide:hover {
   opacity: 0.75;
 }
 
-.slide--thumbniail.agile__slide--active img {
-  border: 2px solid $orange;
+.main {
+  .swiper-slide img {
+    height: 444px;
+  }
 }
 
-.slide img {
+.thumbnails {
+  .swiper-slide img {
+    width: 88px;
+    height: 88px;
+    @media (max-width: 400px) {
+      height: 70px;
+    }
+  }
+
+  .swiper-slide-thumb-active img {
+    border: 2px solid $orange;
+  }
+}
+
+img {
   height: 100%;
   width: 100%;
   -o-object-fit: cover;

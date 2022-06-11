@@ -1,29 +1,50 @@
 <template>
-  <div v-if="modalIsActive" class="backdrop-slider" @click="close">
+  <div class="backdrop-slider" @click.self="close">
     <div class="container-modal">
       <div @click.stop class="modal-slider-wrapper">
-        <div class="prev-arrow" @click="$refs.main.goToPrev()">
+        <div @click="swiper.slidePrev()" class="swiper-button-prev">
           <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
+            width="15"
+            height="18"
+            viewBox="0 0 15 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M13.5 2L6 9.5L14 17.5" stroke="#1D2025" stroke-width="3" />
+            <g clip-path="url(#clip0_3_348)">
+              <path d="M11 1L3 9L11 17" stroke="#1D2026" stroke-width="3" />
+            </g>
+            <defs>
+              <clipPath id="clip0_3_348">
+                <rect width="15" height="18" fill="white" />
+              </clipPath>
+            </defs>
           </svg>
         </div>
-        <div class="next-arrow" @click="$refs.main.goToNext()">
+
+        <div @click="swiper.slideNext()" class="swiper-button-next">
           <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
+            width="15"
+            height="18"
+            viewBox="0 0 15 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M6.5 2L14 9.5L6 17.5" stroke="#1D2025" stroke-width="3" />
+            <g clip-path="url(#clip0_3_350)">
+              <path d="M4 1L12 9L4 17" stroke="#1D2026" stroke-width="3" />
+            </g>
+            <defs>
+              <clipPath id="clip0_3_350">
+                <rect
+                  width="15"
+                  height="18"
+                  fill="white"
+                  transform="matrix(-1 0 0 1 15 0)"
+                />
+              </clipPath>
+            </defs>
           </svg>
         </div>
+
         <div @click="close" class="close-btn">
           <svg
             width="24"
@@ -40,110 +61,86 @@
             />
           </svg>
         </div>
-        <agile
-          class="main"
-          ref="main"
-          :options="options1"
-          :as-nav-for="asNavFor1"
+        <swiper
+          :style="{
+            '--swiper-navigation-color': '#fff',
+            '--swiper-pagination-color': '#fff',
+          }"
+          :loop="true"
+          :spaceBetween="10"
+          :navigation="true"
+          :thumbs="{ swiper: thumbsSwiper }"
+          :modules="modules"
+          class="main swiper-modal"
         >
-          <div
-            class="slide"
-            v-for="(slide, index) in slides"
-            :key="index"
-            :class="`slide--${index}`"
-          >
-            <img :src="require('../assets/' + slide)" alt="" />
-          </div>
-        </agile>
-        <agile
-          class="thumbnails"
-          ref="thumbnails"
-          :options="options2"
-          :as-nav-for="asNavFor2"
+          <swiper-slide v-for="(slide, id) in slides" :key="id"
+            ><img :src="slide"
+          /></swiper-slide>
+        </swiper>
+        <swiper
+          @swiper="setThumbsSwiper"
+          :loop="false"
+          :spaceBetween="10"
+          :slidesPerView="4"
+          :freeMode="true"
+          :watchSlidesProgress="true"
+          :modules="modules"
+          class="thumbnails swiper-modal"
         >
-          <div
-            class="slide slide--thumbniail"
-            v-for="(slide, index) in slides"
-            :key="index"
-            :class="`slide--${index}`"
-            @click="$refs.thumbnails.goTo(index)"
-          >
-            <img
-              :src="
-                require('../assets/' + slide.split('.')[0] + '-thumbnail.jpg')
-              "
-              alt=""
-            />
-          </div>
-        </agile>
+          <swiper-slide v-for="(slide, id) in slides" :key="id"
+            ><img :src="slide"
+          /></swiper-slide>
+        </swiper>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { VueAgile } from "vue-agile";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { FreeMode, Navigation, Thumbs } from "swiper";
+
+import "swiper/css";
+
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import { mapState } from "vuex";
 export default {
-  components: { agile: VueAgile },
-  props: ["modalIsActive"],
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
-      activeLink: "",
-      modalMode: true,
-      imagesReceived: true,
+      thumbsSwiper: null,
 
-      asNavFor1: [],
-      asNavFor2: [],
-      options1: {
-        dots: false,
-        fade: true,
-        navButtons: false,
-      },
-
-      options2: {
-        autoplay: false,
-        centerMode: true,
-        dots: false,
-        navButtons: false,
-        slidesToShow: 4,
-
-        responsive: [
-          {
-            breakpoint: 600,
-            settings: {
-              slidesToShow: 4,
-            },
-          },
-
-          {
-            breakpoint: 1000,
-          },
-        ],
-      },
-
+      swiper: null,
       slides: [],
+      modules: [FreeMode, Navigation, Thumbs],
     };
   },
   computed: {
-    activeImage() {
-      return require(`../assets/` + this.activeLink);
-    },
+    ...mapState(["products"]),
   },
   methods: {
-    updateActiveLink(image) {
-      this.activeLink = image;
-    },
     close() {
       this.$emit("close-modal");
+    },
+    setThumbsSwiper(swiper) {
+      this.thumbsSwiper = swiper;
     },
   },
 
   async mounted() {
-    this.slides = await this.$store.dispatch("productImages", 1);
+    let swiper = document.querySelector(".swiper-modal").swiper;
+    this.swiper = swiper;
   },
-  updated() {
-    this.asNavFor1.push(this.$refs.thumbnails);
-    this.asNavFor2.push(this.$refs.main);
+  created() {
+    let product = this.products.find((product) => {
+      return product.id == 1;
+    });
+    this.slides = product.images;
   },
 };
 </script>
@@ -159,13 +156,9 @@ export default {
   z-index: 1000;
 }
 
-.agile__list {
-  border-radius: 13px;
-}
-
 .modal-slider-wrapper {
-  max-width: 550px;
   width: 100%;
+  max-width: 600px;
   position: relative;
   overflow: visible;
   margin: 60px auto;
@@ -181,7 +174,7 @@ export default {
   }
 }
 
-.prev-arrow {
+.swiper-button-prev {
   width: 56px;
   height: 56px;
   background-color: #fff;
@@ -199,12 +192,12 @@ export default {
     stroke: $orange;
   }
   @media (max-width: 600px) {
-    top: 112%;
+    top: 120%;
     left: 80px;
   }
 }
 
-.next-arrow {
+.swiper-button-next {
   width: 56px;
   height: 56px;
   background-color: #fff;
@@ -222,26 +215,34 @@ export default {
     stroke: $orange;
   }
   @media (max-width: 600px) {
-    top: 112%;
+    top: 120%;
     right: 80px;
   }
 }
 
 .container-modal {
   margin: 0 auto;
-  max-width: 900px;
+  max-width: 800px;
   padding: 30px;
 }
 
-.main {
-  margin-bottom: 30px;
+.swiper {
+  margin-bottom: 16px;
+  width: 100%;
+  height: auto;
+  border-radius: 13px;
+  overflow: hidden;
+  cursor: pointer;
+
+  @media (max-width: 800px) {
+    width: 100%;
+  }
+  @media (max-width: 400px) {
+    margin-bottom: 20px;
+  }
   img {
     border-radius: 13px;
   }
-}
-
-.thumbnails {
-  margin: 0 auto;
 }
 
 .slide {
@@ -249,29 +250,39 @@ export default {
   box-sizing: border-box;
   color: #fff;
   display: flex;
-  height: 100%;
   justify-content: center;
 }
-.slide--thumbniail {
+.swiper-slide {
   cursor: pointer;
-  height: 100%;
+
   width: 100%;
   padding: 0 5px;
   transition: opacity 0.3s;
+  @media (max-width: 400px) {
+  }
   img {
     border-radius: 8px;
   }
 }
-.slide--thumbniail:hover {
-  opacity: 0.75;
+
+.main {
+  .swiper-slide img {
+    width: 100%;
+  }
 }
 
-.slide--thumbniail.agile__slide--active img {
-  border: 2px solid $orange;
+.thumbnails {
+  .swiper-slide img {
+  }
+
+  .swiper-slide-thumb-active img {
+    border: 2px solid $orange;
+  }
 }
 
-.slide img {
+img {
   height: 100%;
+  width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
   -o-object-position: center;

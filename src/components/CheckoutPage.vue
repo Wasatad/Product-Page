@@ -506,15 +506,8 @@
                     :country="country"
                     topCountry="US"
                     :countryName="true"
-                  />
-                  <!-- <input
-                    id="country"
-                    v-model="country"
-                    class="checkout-input"
-                    type="text"
-                    placeholder="Country"
                     required
-                  /> -->
+                  />
                 </div>
                 <div class="checkout-input">
                   <label for="city">City</label>
@@ -616,6 +609,9 @@
                 :key="card.number"
                 class="card-design"
               >
+                <div @click="deleteCard(card.number)" class="delete-card">
+                  <img src="../assets/icon-delete-red.svg" alt="" />
+                </div>
                 <div class="logo">
                   <img
                     :src="require('../assets/' + card.brand + '.svg')"
@@ -688,14 +684,7 @@
         </div>
         <div class="card product-info">
           <div v-for="item in cart" :key="item.id" class="item">
-            <img
-              :src="
-                require('../assets/' +
-                  item.images[0].split('.')[0] +
-                  '-thumbnail.jpg')
-              "
-              alt=""
-            />
+            <img :src="item.images[0]" alt="" />
             <div class="info">
               <div class="item-title">{{ item.name }}</div>
               <div class="item-price">{{ item.price }}</div>
@@ -767,6 +756,8 @@ export default {
       "toggleCongratsModal",
       "addClient",
       "setTotal",
+      "deleteCard",
+      "deleteFromCart",
     ]),
     setPersonActive() {
       this.personActive = true;
@@ -800,7 +791,7 @@ export default {
       }
     },
     deleteFromCart(id) {
-      this.$store.dispatch("deleteFromCart", id);
+      this.deleteFromCart(id);
       this.$router.push("/");
     },
     showCongrats() {
@@ -824,18 +815,11 @@ export default {
     },
   },
   computed: {
-    ...mapState(["savedCards"]),
-    ...mapGetters(["noCards"]),
-    cart() {
-      return this.$store.state.cart;
-    },
-    totalAmount() {
-      return this.$store.getters.totalAmount;
-    },
+    ...mapState(["savedCards", "cart"]),
+    ...mapGetters(["noCards", "totalAmount"]),
     totalPrice() {
       return `${
-        this.$store.state.cart[0].price.split(".")[0].split("$")[1] *
-        this.totalAmount
+        this.cart[0].price.split(".")[0].split("$")[1] * this.totalAmount
       }`;
     },
     cartTotal() {
@@ -893,6 +877,9 @@ export default {
       const walk = x - startX;
       slider.scrollLeft = scrollLeft - walk;
     });
+  },
+  beforeCreate() {
+    this.$store.dispatch("initialiseStore");
   },
 };
 </script>
@@ -1079,6 +1066,22 @@ export default {
       min-width: 233px;
       min-height: 134px;
       position: relative;
+      .delete-card {
+        visibility: hidden;
+        display: block;
+        width: 14px;
+        height: 16px;
+        position: absolute;
+        top: 10px;
+        right: 8px;
+        z-index: 1;
+        cursor: pointer;
+      }
+      &:hover {
+        .delete-card {
+          visibility: visible;
+        }
+      }
       .logo {
         position: absolute;
         top: 14px;

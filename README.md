@@ -27,6 +27,8 @@ Users are able to:
 - Switch the large product image by clicking on the small thumbnail images
 - Add items to the cart
 - View the cart and remove items from it
+- Add credit cards
+- Change delivery options
 
 ### Screenshot
 

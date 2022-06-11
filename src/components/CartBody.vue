@@ -22,7 +22,9 @@ export default {
       this.$emit("openModalSlider");
     },
   },
-  computed: {},
+  beforeCreate() {
+    this.$store.dispatch("initialiseStore");
+  },
 };
 </script>
 
@@ -35,7 +37,7 @@ export default {
   gap: 124px;
   width: 100%;
   @media (max-width: 1200px) {
-    gap: 50px;
+    gap: 30px;
     margin-left: 0;
   }
   @media (max-width: 800px) {

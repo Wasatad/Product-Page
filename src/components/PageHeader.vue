@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isCartOpened"
-    @click="closeCartWindow"
+    @click="closeCart"
     class="backdrop-transparent"
   ></div>
   <div @click.stop class="container">
@@ -35,7 +35,7 @@
             />
           </svg>
 
-          <div v-if="!isEmpty" class="amount-bage">{{ amount }}</div>
+          <div v-if="!isEmpty" class="amount-bage">{{ totalAmount }}</div>
         </div>
         <div class="img-container">
           <div class="img-inner">
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapState } from "vuex";
 import ProductCart from "./ProductCart.vue";
 
 export default {
@@ -60,28 +61,22 @@ export default {
     return {};
   },
   methods: {
+    ...mapMutations(["toggleCartVisibility", "closeCart"]),
     openMenu() {
       this.$emit("openMenu");
     },
-    toggleCartVisibility() {
-      this.$store.dispatch("toggleCartVisibility");
-    },
-    closeCartWindow() {
-      this.$store.commit("closeCart");
-    },
   },
   computed: {
-    amount() {
-      return this.$store.getters.totalAmount;
-    },
+    ...mapGetters(["totalAmount"]),
+    ...mapState(["cart", "cartVisibility"]),
     isEmpty() {
-      if (this.$store.state.cart.length == 0) {
+      if (this.cart.length == 0) {
         return true;
       }
       return false;
     },
     isCartOpened() {
-      return this.$store.state.cartVisibility;
+      return this.cartVisibility;
     },
   },
 };
@@ -89,8 +84,8 @@ export default {
 
 <style lang="scss">
 a {
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
+  color: inherit;
+  text-decoration: inherit;
 }
 .header {
   height: 110px;
@@ -183,10 +178,6 @@ a {
         width: 50px;
         border-radius: 100%;
         position: relative;
-
-        &:hover {
-          // box-shadow: 0px 0px 0px 2px $orange;
-        }
       }
     }
 

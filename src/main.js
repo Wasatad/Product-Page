@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import VueAgile from "vue-agile";
 import router from "./router.js";
 import store from "./store.js";
 import VueCreditCardValidation from "vue-credit-card-validation";
@@ -12,7 +11,6 @@ const app = createApp(App);
 app
   .use(store)
   .use(router)
-  .use(VueAgile)
   .use(VueCreditCardValidation)
   .use(vueCountryRegionSelect);
 app.mount("#app");

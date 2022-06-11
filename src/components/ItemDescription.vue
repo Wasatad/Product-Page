@@ -17,10 +17,10 @@
       <div class="counter">
         <div
           @click="deleteProduct"
-          :class="[{ notActive: amount == 1 }, 'minus', 'icon-counter']"
+          :class="[{ notActive: counterAmount == 1 }, 'minus', 'icon-counter']"
         >
           <svg
-            :class="{ notActive: amount == 1 }"
+            :class="{ notActive: counterAmount == 1 }"
             width="12"
             height="3"
             viewBox="0 0 12 3"
@@ -38,7 +38,7 @@
           @keydown="enteredAmount"
           class="amount"
           contenteditable="true"
-          >{{ amount }}</span
+          >{{ counterAmount }}</span
         >
         <div @click="addProduct" class="plus icon-counter">
           <svg
@@ -57,7 +57,7 @@
           </svg>
         </div>
       </div>
-      <button @click="addToCart" class="add-to-cart">
+      <button @click="addProductToCart" class="add-to-cart">
         <img src="../assets/icon-cart-btn.svg" alt="" />
         Add to cart
       </button>
@@ -66,17 +66,17 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapState } from "vuex";
 export default {
   components: {},
   data() {
     return {};
   },
   computed: {
-    amount() {
-      return this.$store.state.counterAmount;
-    },
+    ...mapState(["counterAmount"]),
+    ...mapGetters(["findProduct"]),
     item() {
-      return this.$store.getters.findProduct(1);
+      return this.findProduct(1);
     },
     sale() {
       return (
@@ -86,6 +86,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["addProduct", "deleteProduct", "openCart", "addToCart"]),
     enteredAmount(event) {
       if (
         !event.key.match(/^[0-9]/g) &&
@@ -98,7 +99,7 @@ export default {
 
     validity(event) {
       if (event.target.innerText.length < 1) {
-        event.target.innerText = this.amount;
+        event.target.innerText = this.counterAmount;
       } else if (
         event.target.innerText[0] == "0" &&
         event.target.innerText.length > 1
@@ -106,27 +107,22 @@ export default {
         let newValue = "";
         newValue = event.target.innerText.split("").slice(1).join("");
         this.$store.dispatch("setAmount", +newValue);
-        event.target.innerText = this.amount;
+        event.target.innerText = this.counterAmount;
       } else if (
         event.target.innerText == "0" &&
         event.target.innerText.length < 2
       ) {
         this.$store.dispatch("setAmount", 1);
-        event.target.innerText = this.amount;
+        event.target.innerText = this.counterAmount;
       } else {
         this.$store.dispatch("setAmount", +event.target.innerText);
-        event.target.innerText = this.amount;
+        event.target.innerText = this.counterAmount;
       }
     },
-    addProduct() {
-      this.$store.dispatch("addProduct");
-    },
-    deleteProduct() {
-      this.$store.dispatch("deleteProduct");
-    },
-    addToCart() {
-      this.$store.commit("openCart");
-      this.$store.dispatch("addToCart", 1);
+
+    addProductToCart() {
+      this.openCart();
+      this.addToCart(1);
     },
   },
 };
