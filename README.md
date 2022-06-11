@@ -45,7 +45,8 @@ Users are able to:
 - [Vue.js](https://vuejs.org/) - JS framework
 - [Vuex.js](https://vuex.vuejs.org/) - State manager
 - [SCSS](https://sass-lang.com/) - CSS pre-processor
-- [Vue-Agile](https://github.com/lukaszflorczak/vue-agile) - A carousel component for Vue.js inspired by Slick
+- [Swiper](https://swiperjs.com/) - Image slider
+- [VueCreditCardValidation](https://github.com/wuori/vue-credit-card-validation) - A Vue plugin for formatting and validating credit card form fields
 
 ### What I learned
 
